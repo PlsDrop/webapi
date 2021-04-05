@@ -22,7 +22,7 @@ namespace webapi
         }
 
         [HttpGet("/lists")]
-        public List<(int, string)> GetAllLists()
+        public List<TasksList> GetAllLists()
         {
             return tasksListService.GetAll();
         }

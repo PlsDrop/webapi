@@ -19,12 +19,12 @@ namespace webapi
             return listOfTasksLists;
         }
 
-        public List<(int, string)> GetAll()
+        public List<TasksList> GetAll()
         {
-            List<(int, string)> list = new List<(int, string)>(); 
+            List<TasksList> list = new List<TasksList>(); 
             foreach(var item in listOfTasksLists)
             {
-                list.Add((item.Key ,item.Value.name));
+                list.Add(new TasksList() {title = item.Value.name, id = item.Key});
             }
             return list;
         }
