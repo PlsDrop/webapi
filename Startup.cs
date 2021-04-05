@@ -28,7 +28,6 @@ namespace webapi
         {
 
             services.AddControllers();
-            services.AddSingleton<TasksService>();
             services.AddSingleton<TasksListService>();
             services.AddSwaggerGen(c =>
             {
