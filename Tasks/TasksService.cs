@@ -10,8 +10,10 @@ namespace webapi
                 new Task() {id = 1, title = "Go outside"},
                 new Task() {id = 2, title = "Buy food"}
             };
+        public string name = "";
         private int lastId = 2; 
         
+
         public List<Task> GetAll()
         {
             return tasksList;

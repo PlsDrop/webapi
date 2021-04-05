@@ -9,54 +9,63 @@ using Microsoft.AspNetCore.Http;
 namespace webapi
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("/lists")]
     public class TasksController : ControllerBase
     {
         private TasksService tasksService;
+        private TasksListService tasksListService;
 
-        public TasksController(TasksService service)
+        public TasksController(TasksService taskService, TasksListService tasksListService)
         {
-           this.tasksService = service;
+           this.tasksService = taskService;
+           this.tasksListService = tasksListService;
         }
 
-        [HttpGet("")]
-        public IEnumerable<Task> GetTasks()
+        [HttpGet("/lists")]
+        public List<(int, string)> GetAllLists()
         {
-            return tasksService.GetAll();
-        }
-       
-        [HttpGet("/Tasks/{taskId}")]
-        public Task GetTask(int taskId)
-        {
-            return tasksService.Get(taskId);
+            return tasksListService.GetAll();
         }
         
-        [HttpPost("")]
-        public ActionResult<Task> AddTask(Task task)
+
+        [HttpGet("/lists/{listId}/tasks")]
+        public IEnumerable<Task> GetList(int listId)
         {
-            Task createdTask = tasksService.Create(task);
-            return Created($"tasks/{createdTask.id}", createdTask);
+            return tasksListService.GetOne(listId); 
+        }
+       
+        [HttpGet("/lists/{listId}/tasks/{taskId}")]
+        public Task GetTask(int listId, int taskId)
+        {
+            return tasksListService.GetDict()[listId].Get(taskId);
+        }
+        
+        [HttpPost("/lists/{listId}/tasks")]
+        public ActionResult<Task> AddTask(int listId, Task task)
+        {   
+            Task createdTask = tasksListService.GetDict()[listId].Create(task);  //tasksService.Create(task);
+            return Created($"/lists/{listId}/tasks/{createdTask.id}", createdTask);
         }
 
-        [HttpPut("/Tasks/{taskId}")]
-        public ActionResult<Task> ReplaceTask(int taskId, Task task)
+        [HttpPut("/lists/{listId}/tasks/{taskId}")]
+        public ActionResult<Task> ReplaceTask(int listId, int taskId, Task task)
         {
-            Task createdTask = tasksService.Replace(taskId, task);
-            return Created($"tasks/{createdTask.id}", createdTask);
+            Task createdTask = tasksListService.GetDict()[listId].Replace(taskId, task); //tasksService.Replace(taskId, task);
+            return Created($"/lists/{listId}/tasks/{createdTask.id}", createdTask);
         }
 
-        [HttpPatch("/Tasks/{taskId}")]
-        public ActionResult<Task> PatchTask(int taskId, Task task)
+        [HttpPatch("/lists/{listId}/tasks/{taskId}")]
+        public ActionResult<Task> PatchTask(int listId, int taskId, Task task)
         {
-            Task updatedTask = tasksService.Patch(taskId, task);
-            return Created($"tasks/{updatedTask.id}", updatedTask);
+            Task updatedTask = tasksListService.GetDict()[listId].Patch(taskId, task); //tasksService.Patch(taskId, task);
+            return Created($"/lists/{listId}/tasks/{updatedTask.id}", updatedTask);
         }
 
-        [HttpDelete("/Tasks/{taskId}")]
-        public ActionResult DeleteTask(int taskId, Task task)
+        [HttpDelete("/lists/{listId}/tasks/{taskId}")]
+        public ActionResult DeleteTask(int listId, int taskId)
         {
-            tasksService.Delete(taskId);
-            return Ok($"Deleted: /Tasks/{taskId}");
+            tasksListService.GetDict()[listId].Delete(taskId); //tasksService.Delete(taskId);
+            return Ok($"Deleted: /lists/{listId}/tasks/{taskId}");
         }
     }
 }

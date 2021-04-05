@@ -29,6 +29,7 @@ namespace webapi
 
             services.AddControllers();
             services.AddSingleton<TasksService>();
+            services.AddSingleton<TasksListService>();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "webapi", Version = "v1" });
